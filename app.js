@@ -1,5 +1,5 @@
 const express = require("express");
-const products = require("./data");
+let products = require("./data");
 const app = express();
 app.use(express.json());
 //  Create products route
@@ -15,8 +15,25 @@ app.delete("/products/:productID", (req, res) => {
     (product) => product.id === +req.params.productID
   );
   if (findProduct) {
-    products.filter((product) => product.id !== +req.params.productID);
+    products = products.filter(
+      (product) => product.id !== +req.params.productID
+    );
     res.status(204).end();
+  } else {
+    res.status(404).end();
+  }
+});
+
+//Update products route
+app.put("/products/:productID", (req, res) => {
+  const findProduct = products.find(
+    (product) => product.id === +req.params.productID
+  );
+  if (findProduct) {
+    products = products.filter((product) =>
+      product.id === product.id ? req.body : product
+    );
+    res.status(201).end();
   } else {
     res.status(404).end();
   }
