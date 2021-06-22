@@ -1,48 +1,82 @@
-let products = require("../data");
+const { Product } = require("../db/models");
 
-exports.createProduct = (req, res) => {
-  req.body.id = products[products.length - 1].id + 1;
-  products.push(req.body);
-  res.status(201).json(req.body);
+exports.fetchProduct = async (productID, next) => {
+  try {
+    const product = await Product.findByPk(productID);
+    return product;
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.deletProduct = (req, res) => {
-  const findProduct = products.find(
-    (product) => product.id === +req.params.productID
-  );
-  if (findProduct) {
-    products = products.filter(
-      (product) => product.id !== +req.params.productID
-    );
+exports.createProduct = async (req, res, next) => {
+  try {
+    const nweProduct = await Product.create(req.body);
+    res.status(201).json(nweProduct);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deletProduct = async (req, res, next) => {
+  try {
+    console.log(req.body.ids);
+    // const findProducts = await Product.findAll({
+    //   where: {
+    //     id: {
+    //       [Sequelize.Op.in]: req.body.ids.split(","),
+    //     },
+    //   },
+    // });
+    // await Product.destroy({ where: { id: req.body.ids.split(",") } });
+
+    await req.product.destroy();
     res.status(204).end();
-  } else {
-    res.status(404).end();
+  } catch (error) {
+    next(error);
   }
 };
-exports.updateProducts = (req, res) => {
-  const findProduct = products.find(
-    (product) => product.id === +req.params.productID
-  );
-  if (findProduct) {
-    products = products.filter((product) =>
-      product.id === product.id ? req.body : product
-    );
-    res.status(201).end();
-  } else {
-    res.status(404).end();
+exports.updateProducts = async (req, res, next) => {
+  // try {
+  //   const findProducts = await Product.findByPk(req.params.id);
+  //   if (findProducts) {
+  //     findProducts.update(req.body);
+  //     res.status(201).end();
+  //   } else {
+  //     res.status(404).end();
+  //   }
+  // } catch (error) {
+  //   res.status(500).json({ message: error.message ?? "Server Error" });
+  // }
+  try {
+    await req.product.update(req.body);
+    res.status(204).end();
+  } catch (error) {
+    next(error);
   }
 };
-exports.pruductList = (req, res) => {
-  console.log(products);
-  res.json(products);
-};
-exports.delaileProduct = (req, res) => {
-  const findProduct = products.find(
-    (product) => product.id === +req.params.productID
-  );
-  if (findProduct) {
-    res.json(findProduct);
-  } else {
-    res.status(404).end();
+exports.pruductList = async (req, res, next) => {
+  try {
+    const products = await Product.findAll({
+      attributes: {
+        exclude: ["createdAt", "updatedAt"],
+      },
+    });
+    res.json(products);
+  } catch (error) {
+    next(error);
   }
+};
+exports.delaileProduct = async (req, res) => {
+  // try {
+  //   const findProducts = await Product.findByPk(req.params.productID);
+  //   if (findProducts) {
+  //     res.json(findProducts);
+  //   } else {
+  //     res.status(404).end();
+  //   }
+  // } catch (error) {
+  //   res.status(500).json({ message: error.message ?? "Server Error" });
+  // }
+  res.json(req.product);
 };
