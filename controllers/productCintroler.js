@@ -11,6 +11,9 @@ exports.fetchProduct = async (productID, next) => {
 
 exports.createProduct = async (req, res, next) => {
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    }
     const nweProduct = await Product.create(req.body);
     res.status(201).json(nweProduct);
   } catch (error) {
@@ -20,16 +23,6 @@ exports.createProduct = async (req, res, next) => {
 
 exports.deletProduct = async (req, res, next) => {
   try {
-    console.log(req.body.ids);
-    // const findProducts = await Product.findAll({
-    //   where: {
-    //     id: {
-    //       [Sequelize.Op.in]: req.body.ids.split(","),
-    //     },
-    //   },
-    // });
-    // await Product.destroy({ where: { id: req.body.ids.split(",") } });
-
     await req.product.destroy();
     res.status(204).end();
   } catch (error) {
@@ -37,18 +30,10 @@ exports.deletProduct = async (req, res, next) => {
   }
 };
 exports.updateProducts = async (req, res, next) => {
-  // try {
-  //   const findProducts = await Product.findByPk(req.params.id);
-  //   if (findProducts) {
-  //     findProducts.update(req.body);
-  //     res.status(201).end();
-  //   } else {
-  //     res.status(404).end();
-  //   }
-  // } catch (error) {
-  //   res.status(500).json({ message: error.message ?? "Server Error" });
-  // }
   try {
+    if (req.file) {
+      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+    }
     await req.product.update(req.body);
     res.status(204).end();
   } catch (error) {
