@@ -1,5 +1,5 @@
 const express = require("express");
-const productControler = require("../controllers/productCintroler");
+const productControler = require("../controllers/productController");
 const router = express.Router();
 const multer = require("multer");
 router.param("productID", async (req, res, next, productID) => {
@@ -23,8 +23,8 @@ const upload = multer({
   storage,
 });
 
-//  Create products route
-router.post("/", upload.single("image"), productControler.createProduct);
+// //  Create products route
+// router.post("/", upload.single("image"), productControler.createProduct);
 
 //Delete products route
 router.delete("/:productID", productControler.deletProduct);

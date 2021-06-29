@@ -9,17 +9,17 @@ exports.fetchProduct = async (productID, next) => {
   }
 };
 
-exports.createProduct = async (req, res, next) => {
-  try {
-    if (req.file) {
-      req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
-    }
-    const nweProduct = await Product.create(req.body);
-    res.status(201).json(nweProduct);
-  } catch (error) {
-    next(error);
-  }
-};
+// exports.createProduct = async (req, res, next) => {
+//   try {
+//     if (req.file) {
+//       req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+//     }
+//     const nweProduct = await Product.create(req.body);
+//     res.status(201).json(nweProduct);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 exports.deletProduct = async (req, res, next) => {
   try {
