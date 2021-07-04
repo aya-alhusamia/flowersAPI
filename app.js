@@ -3,11 +3,13 @@ const cors = require("cors");
 // const db = require("./db/models");
 const productRouter = require("./routes/products");
 const shopRouter = require("./routes/shops");
+const userRouter = require("./routes/users");
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/products", productRouter);
 app.use("/shops", shopRouter);
+app.use(userRouter);
 app.use("/media", express.static("media"));
 // db.sequelize.sync();
 app.use((req, res, next) => {
